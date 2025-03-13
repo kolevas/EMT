@@ -11,7 +11,8 @@ public interface BookService {
     public Optional<Book> save(BookDto bookDto);
     public Optional<Book> update(Long id, BookDto bookDto);
     public Optional<Book> delete(Long id);
-    public Optional<Book> loanBook(Long id);
+//    public Optional<Book> loanBook(Long id);
     public List<Book> findAll();
     public Optional<Book> findById(Long id);
+//    public void createCopy(Long id);
 }

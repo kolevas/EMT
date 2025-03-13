@@ -11,10 +11,11 @@ public class EmtApplication {
 	}
 
 }
-
+//
 //		{
 //		"name": "Les Misérables",
 //		"category": "NOVEL",
 //		"author": 1,
 //		"availableCopies": 5
 //		}
+//nov entitet primerok za sekoja kniga i da ne se cuva int available cpy tuku da ima vrska i da ima iznajmuvanje za toj primerok

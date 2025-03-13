@@ -1,7 +1,9 @@
 package mk.ukim.finki.emt.web;
 
 import mk.ukim.finki.emt.model.Book;
+import mk.ukim.finki.emt.model.BookCopy;
 import mk.ukim.finki.emt.model.dto.BookDto;
+import mk.ukim.finki.emt.service.BookCopyService;
 import mk.ukim.finki.emt.service.BookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +13,10 @@ import java.util.List;
 @RestController
 public class BookController {
     private final BookService bookService;
-    public BookController(BookService bookService) {
+    private final BookCopyService copyService;
+    public BookController(BookService bookService, BookCopyService copyService) {
         this.bookService = bookService;
+        this.copyService = copyService;
     }
 
     @GetMapping
@@ -60,9 +64,20 @@ public class BookController {
 
     @PutMapping("/loan/{id}")
     public ResponseEntity<Book> loanBook(@PathVariable Long id) {
-        return bookService.loanBook(id)
+        return copyService.loan(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/createCopy/{id}")
+    public ResponseEntity<Book> createCopy(@PathVariable Long id) {
+        return copyService.createCopy(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/bookCopies/{id}")
+    public List<BookCopy> findAllCopies(@PathVariable Long id) {
+        return this.copyService.findByBook(id);
+    }
 }

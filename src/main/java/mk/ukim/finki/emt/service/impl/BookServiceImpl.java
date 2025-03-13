@@ -3,8 +3,10 @@ package mk.ukim.finki.emt.service.impl;
 import mk.ukim.finki.emt.model.Book;
 import mk.ukim.finki.emt.model.dto.BookDto;
 import mk.ukim.finki.emt.repository.AuthorRepository;
+import mk.ukim.finki.emt.repository.BookCopyRepository;
 import mk.ukim.finki.emt.repository.BookRepository;
 import mk.ukim.finki.emt.service.AuthorService;
+import mk.ukim.finki.emt.service.BookCopyService;
 import mk.ukim.finki.emt.service.BookService;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +19,18 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorService authorService;
 
+
     public BookServiceImpl(BookRepository bookRepository, AuthorService authorService) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
+
     }
 
     @Override
     public Optional<Book> save(BookDto book) {
 
         if (book.getAuthor() != null && authorService.findById(book.getAuthor()).isPresent()) {
-            return Optional.of(bookRepository.save(new Book(book.getName(), book.getCategory(), authorService.findById(book.getAuthor()).get(), book.getAvailableCopies())));
+            return Optional.of(bookRepository.save(new Book(book.getName(), book.getCategory(), authorService.findById(book.getAuthor()).get())));
         }
         return Optional.empty();
     }
@@ -39,9 +43,6 @@ public class BookServiceImpl implements BookService {
         }
         if (bookDto.getCategory() != null) {
             book.setCategory(bookDto.getCategory());
-        }
-        if (bookDto.getAvailableCopies() != null) {
-            book.setAvailableCopies(bookDto.getAvailableCopies());
         }
         if (bookDto.getName() != null) {
             book.setName(bookDto.getName());
@@ -56,13 +57,13 @@ public class BookServiceImpl implements BookService {
         return Optional.of(book);
     }
 
-    @Override
-    public Optional<Book> loanBook(Long id) {
-        Book book = this.findById(id).get();
-        book.setAvailableCopies(book.getAvailableCopies() - 1);
-        this.bookRepository.save(book);
-        return Optional.of(book);
-    }
+//    @Override
+//    public Optional<Book> loanBook(Long id) {
+//        Book book = this.findById(id).get();
+//        book.setAvailableCopies(book.getAvailableCopies() - 1);
+//        this.bookRepository.save(book);
+//        return Optional.of(book);
+//    }
 
     @Override
     public List<Book> findAll() {
@@ -73,4 +74,9 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> findById(Long id) {
         return Optional.of(bookRepository.findById(id).orElseThrow(RuntimeException::new));
     }
+
+//    @Override
+//    public void createCopy(Long id) {
+//        copyService.save(id);
+//    }
 }

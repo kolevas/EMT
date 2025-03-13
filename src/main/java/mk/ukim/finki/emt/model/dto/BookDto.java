@@ -12,13 +12,11 @@ public class BookDto {
     private BookCategory category;
     @NotNull
     private Long author;
-    private Integer availableCopies;
 
-    public BookDto(String name, BookCategory category, Long author, Integer availableCopies) {
+    public BookDto(String name, BookCategory category, Long author) {
         this.name = name;
         this.category = category;
         this.author = author;
-        this.availableCopies = availableCopies;
     }
     public BookDto() {}
 }
