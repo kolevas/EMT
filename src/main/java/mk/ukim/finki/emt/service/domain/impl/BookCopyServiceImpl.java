@@ -1,11 +1,10 @@
-package mk.ukim.finki.emt.service.impl;
+package mk.ukim.finki.emt.service.domain.impl;
 
-import mk.ukim.finki.emt.model.Book;
-import mk.ukim.finki.emt.model.BookCopy;
-import mk.ukim.finki.emt.model.dto.BookDto;
+import mk.ukim.finki.emt.model.domain.Book;
+import mk.ukim.finki.emt.model.domain.BookCopy;
 import mk.ukim.finki.emt.repository.BookCopyRepository;
-import mk.ukim.finki.emt.service.BookCopyService;
-import mk.ukim.finki.emt.service.BookService;
+import mk.ukim.finki.emt.service.domain.BookCopyService;
+import mk.ukim.finki.emt.service.domain.BookService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +23,11 @@ public class BookCopyServiceImpl implements BookCopyService {
     }
 
     @Override
-    public Optional<Book> createCopy(Long id) {
+    public Optional<BookCopy> createCopy(Long id) {
         Book book = bookService.findById(id).get();
-        copyRepository.save(new BookCopy(book));
-        return Optional.of(book);
+        BookCopy bookCopy = new BookCopy(book);
+        copyRepository.save(bookCopy);
+        return Optional.of(bookCopy);
     }
 
     @Override

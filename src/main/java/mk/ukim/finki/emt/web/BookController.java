@@ -1,51 +1,62 @@
 package mk.ukim.finki.emt.web;
 
-import mk.ukim.finki.emt.model.Book;
-import mk.ukim.finki.emt.model.BookCopy;
-import mk.ukim.finki.emt.model.dto.BookDto;
-import mk.ukim.finki.emt.service.BookCopyService;
-import mk.ukim.finki.emt.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import mk.ukim.finki.emt.dto.CreateBookDto;
+import mk.ukim.finki.emt.dto.UpdateBookCopyDto;
+import mk.ukim.finki.emt.dto.UpdateBookDto;
+import mk.ukim.finki.emt.model.domain.Book;
+import mk.ukim.finki.emt.model.domain.BookCopy;
+import mk.ukim.finki.emt.service.application.BookApplicationService;
+import mk.ukim.finki.emt.service.application.BookCopyApplicationService;
+import mk.ukim.finki.emt.service.domain.BookCopyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("/api")
 public class BookController {
-    private final BookService bookService;
-    private final BookCopyService copyService;
-    public BookController(BookService bookService, BookCopyService copyService) {
+    private final BookApplicationService bookService;
+    private final BookCopyApplicationService copyService;
+
+    public BookController(BookApplicationService bookService, BookCopyApplicationService copyService) {
         this.bookService = bookService;
         this.copyService = copyService;
     }
 
+
     @GetMapping
-    public List<Book> findAll() {
+    @Operation(summary = "Најди ги сите книги", description = "Го враќа списокот на сите книги.")
+    public List<UpdateBookDto> findAll() {
         return this.bookService.findAll();
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<Book> findById(@PathVariable Long id) {
+    @Operation(summary = "Најди книга по ID", description = "Го враќа записот за книгата со даденото ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Книгата е успешно пронајдена"),
+            @ApiResponse(responseCode = "404", description = "Книгата не е пронајдена")
+    })
+    public ResponseEntity<UpdateBookDto> findById(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         return bookService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
-//    Да додава нови книги кои може да се изнајмат
-
     @PostMapping("/add")
-    public ResponseEntity<Book> addBook(@RequestBody BookDto bookDto) {
+    @Operation(summary = "Додај нова книга", description = "Додава нов запис за книга која може да се изнајмува.")
+    public ResponseEntity<UpdateBookDto> addBook(@RequestBody CreateBookDto bookDto) {
         return bookService.save(bookDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    Да брише книги кои повеќе не се во добра состојба и нема да се изнајмуваат
-
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @Operation(summary = "Избриши книга", description = "Брише запис за книга која повеќе не е во добра состојба.")
+    public ResponseEntity<Void> delete(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         if(bookService.findById(id).isPresent()) {
             bookService.delete(id);
             return ResponseEntity.ok().build();
@@ -53,31 +64,33 @@ public class BookController {
         return ResponseEntity.notFound().build();
     }
 
-//    Да изменува одреден запис за книга
     @PutMapping("/edit/{id}")
-    public ResponseEntity<Book> editBook(@PathVariable Long id,@RequestBody BookDto bookDto) {
+    @Operation(summary = "Измени запис за книга", description = "Го ажурира записот за дадена книга со нови информации.")
+    public ResponseEntity<UpdateBookDto> editBook(@Parameter(description = "ID на книгата") @PathVariable Long id, @RequestBody CreateBookDto bookDto) {
         return bookService.update(id, bookDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-//    Да обележи одредена книга како изнајмена
 
     @PutMapping("/loan/{id}")
-    public ResponseEntity<Book> loanBook(@PathVariable Long id) {
+    @Operation(summary = "Изнајми книга", description = "Означува одредена копија на книга како изнајмена.")
+    public ResponseEntity<UpdateBookCopyDto> loanBook(@Parameter(description = "ID на копијата на книгата") @PathVariable Long id) {
         return copyService.loan(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/createCopy/{id}")
-    public ResponseEntity<Book> createCopy(@PathVariable Long id) {
+    @Operation(summary = "Креирај копија на книга", description = "Создава нова копија на дадена книга.")
+    public ResponseEntity<UpdateBookCopyDto> createCopy(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         return copyService.createCopy(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/bookCopies/{id}")
-    public List<BookCopy> findAllCopies(@PathVariable Long id) {
+    @Operation(summary = "Најди ги сите копии на книга", description = "Го враќа списокот на сите копии на дадена книга.")
+    public List<UpdateBookCopyDto> findAllCopies(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         return this.copyService.findByBook(id);
     }
 }

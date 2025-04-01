@@ -1,11 +1,10 @@
-package mk.ukim.finki.emt.service.impl;
+package mk.ukim.finki.emt.service.domain.impl;
 
-import mk.ukim.finki.emt.model.Author;
-import mk.ukim.finki.emt.model.Country;
+import mk.ukim.finki.emt.model.domain.Author;
+import mk.ukim.finki.emt.model.domain.Country;
 import mk.ukim.finki.emt.repository.AuthorRepository;
-import mk.ukim.finki.emt.repository.CountryRepository;
-import mk.ukim.finki.emt.service.AuthorService;
-import mk.ukim.finki.emt.service.CountryService;
+import mk.ukim.finki.emt.service.domain.AuthorService;
+import mk.ukim.finki.emt.service.domain.CountryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,20 +31,20 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> update(Long id, String name, String surname, Long countryId) {
+    public Optional<Author> update(Long id, Author author) {
         Optional<Author> savedAuthor = this.findById(id);
-        Optional<Country> country = countryService.findById(countryId);
-        savedAuthor.get().setName(name);
-        savedAuthor.get().setSurname(surname);
+        Optional<Country> country = countryService.findById(author.getCountry().getId());
+        savedAuthor.get().setName(author.getName());
+        savedAuthor.get().setSurname(author.getSurname());
         savedAuthor.get().setCountry(country.get());
         authorRepository.save(savedAuthor.get());
         return savedAuthor;
     }
 
     @Override
-    public Optional<Author> save(String name, String surname, Long countryId) {
-        Optional<Country> country = countryService.findById(countryId);
-        return Optional.of(authorRepository.save(new Author(name, surname, country.get())));
+    public Optional<Author> save(Author author) {
+        Optional<Country> country = countryService.findById(author.getCountry().getId());
+        return Optional.of(authorRepository.save(new Author(author.getName(), author.getSurname(), country.get())));
     }
 
     @Override

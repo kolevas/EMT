@@ -1,4 +1,4 @@
-package mk.ukim.finki.emt.model;
+package mk.ukim.finki.emt.model.enumerations;
 
 
 public enum BookCategory {

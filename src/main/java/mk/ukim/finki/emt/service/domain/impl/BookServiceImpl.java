@@ -1,13 +1,9 @@
-package mk.ukim.finki.emt.service.impl;
+package mk.ukim.finki.emt.service.domain.impl;
 
-import mk.ukim.finki.emt.model.Book;
-import mk.ukim.finki.emt.model.dto.BookDto;
-import mk.ukim.finki.emt.repository.AuthorRepository;
-import mk.ukim.finki.emt.repository.BookCopyRepository;
+import mk.ukim.finki.emt.model.domain.Book;
 import mk.ukim.finki.emt.repository.BookRepository;
-import mk.ukim.finki.emt.service.AuthorService;
-import mk.ukim.finki.emt.service.BookCopyService;
-import mk.ukim.finki.emt.service.BookService;
+import mk.ukim.finki.emt.service.domain.AuthorService;
+import mk.ukim.finki.emt.service.domain.BookService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,25 +23,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> save(BookDto book) {
+    public Optional<Book> save(Book book) {
 
-        if (book.getAuthor() != null && authorService.findById(book.getAuthor()).isPresent()) {
-            return Optional.of(bookRepository.save(new Book(book.getName(), book.getCategory(), authorService.findById(book.getAuthor()).get())));
+        if (book.getAuthor() != null && authorService.findById(book.getAuthor().getId()).isPresent()) {
+            return Optional.of(bookRepository.save(new Book(book.getName(), book.getCategory(), authorService.findById(book.getAuthor().getId()).get())));
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<Book> update(Long id, BookDto bookDto) {
-        Book book = this.findById(id).get();
-        if (bookDto.getAuthor() != null) {
-            book.setAuthor(authorService.findById(bookDto.getAuthor()).get());
+    public Optional<Book> update(Long id, Book book) {
+
+        if (book.getAuthor() != null) {
+            book.setAuthor(authorService.findById(book.getAuthor().getId()).get());
         }
-        if (bookDto.getCategory() != null) {
-            book.setCategory(bookDto.getCategory());
+        if (book.getCategory() != null) {
+            book.setCategory(book.getCategory());
         }
-        if (bookDto.getName() != null) {
-            book.setName(bookDto.getName());
+        if (book.getName() != null) {
+            book.setName(book.getName());
         }
         return Optional.of(this.bookRepository.save(book));
     }

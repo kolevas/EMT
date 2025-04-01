@@ -1,14 +1,13 @@
-package mk.ukim.finki.emt.service;
+package mk.ukim.finki.emt.service.domain;
 
-import mk.ukim.finki.emt.model.Book;
-import mk.ukim.finki.emt.model.BookCopy;
-import mk.ukim.finki.emt.model.dto.BookDto;
+import mk.ukim.finki.emt.model.domain.Book;
+import mk.ukim.finki.emt.model.domain.BookCopy;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BookCopyService {
-    Optional<Book> createCopy(Long id);
+    Optional<BookCopy> createCopy(Long id);
     Optional<BookCopy> findById(Long id);
     List<BookCopy> findAll();
     List<BookCopy> findByBook(Long id);
