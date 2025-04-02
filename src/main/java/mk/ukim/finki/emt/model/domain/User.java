@@ -7,8 +7,10 @@ import mk.ukim.finki.emt.model.enumerations.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,6 +26,8 @@ public class User implements UserDetails {
     private String name;
 
     private String surname;
+    @ManyToMany
+    private List<Book> wishlistedBooks;
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
@@ -40,6 +44,7 @@ public class User implements UserDetails {
 //    private List<> carts;
 
     public User() {
+        this.wishlistedBooks = new ArrayList<>();
     }
 
     public User(String username, String password, String name, String surname, Role role) {
@@ -48,6 +53,7 @@ public class User implements UserDetails {
         this.name = name;
         this.surname = surname;
         this.role = role;
+        this.wishlistedBooks = new ArrayList<>();
     }
 
     public User(String username, String password, String name, String surname) {
@@ -56,11 +62,13 @@ public class User implements UserDetails {
         this.name = name;
         this.surname = surname;
         this.role = Role.ROLE_USER;
+        this.wishlistedBooks = new ArrayList<>();
     }
 
     public User(UserDetails userDetails) {
         this.username = userDetails.getUsername();
         this.password = userDetails.getPassword();
+        this.wishlistedBooks = new ArrayList<>();
     }
 
     @Override

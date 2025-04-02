@@ -5,12 +5,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import mk.ukim.finki.emt.dto.CreateUserDto;
-import mk.ukim.finki.emt.dto.LoginUserDto;
-import mk.ukim.finki.emt.dto.UpdateUserDto;
+import mk.ukim.finki.emt.dto.*;
 import mk.ukim.finki.emt.service.application.UserApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -69,6 +69,23 @@ public class UserController {
     @GetMapping("/logout")
     public void logout(HttpServletRequest request) {
         request.getSession().invalidate();
+    }
+    @Operation(summary = "User wishlist")
+    @GetMapping("/my_wishlist/{username}")
+    public List<UpdateBookDto> getUserWishlist(@PathVariable String username) {
+        return userApplicationService.getUserWishlist(username);
+    }
+
+    @Operation(summary = "Add book to wishlist")
+    @PostMapping("/add_to_wishlist/{username}")
+    public List<UpdateBookDto> addBookToWhishlist(@PathVariable String username, @RequestBody Long bookId){
+        return userApplicationService.addBookToWhishlist(username, bookId);
+    }
+
+    @Operation(summary = "Loan wishlisted books")
+    @GetMapping("/loan_wishlist/{username}")
+    public List<UpdateBookCopyDto> loanUserWishlist(@PathVariable String username) {
+        return userApplicationService.loanWishlistedBooks(username);
     }
 }
 
