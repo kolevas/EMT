@@ -1,6 +1,7 @@
 package mk.ukim.finki.emt.service.application.impl;
 
 import mk.ukim.finki.emt.dto.UpdateBookCopyDto;
+import mk.ukim.finki.emt.dto.UpdateBookDto;
 import mk.ukim.finki.emt.service.application.BookCopyApplicationService;
 import mk.ukim.finki.emt.service.domain.BookCopyService;
 import mk.ukim.finki.emt.service.domain.BookService;
@@ -38,12 +39,12 @@ public class BookCopyApplicationServiceImpl implements BookCopyApplicationServic
     }
 
     @Override
-    public Optional<UpdateBookCopyDto> loan(Long id) {
-        return bookCopyService.findById(id).map(UpdateBookCopyDto::from);
+    public Optional<UpdateBookDto> loan(Long id) {
+        return bookCopyService.loan(id).map(UpdateBookDto::from);
     }
 
     @Override
     public Optional<UpdateBookCopyDto> returnBook(Long id) {
-        return bookCopyService.findById(id).map(UpdateBookCopyDto::from);
+        return bookCopyService.returnBook(id).map(UpdateBookCopyDto::from);
     }
 }

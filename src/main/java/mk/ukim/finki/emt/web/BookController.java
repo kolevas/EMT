@@ -78,7 +78,7 @@ public class BookController {
 
     @PutMapping("/loan/{id}")
     @Operation(summary = "Изнајми книга", description = "Означува одредена копија на книга како изнајмена.")
-    public ResponseEntity<UpdateBookCopyDto> loanBook(@Parameter(description = "ID на копијата на книгата") @PathVariable Long id) {
+    public ResponseEntity<UpdateBookDto> loanBook(@Parameter(description = "ID на копијата на книгата") @PathVariable Long id) {
         return copyService.loan(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
