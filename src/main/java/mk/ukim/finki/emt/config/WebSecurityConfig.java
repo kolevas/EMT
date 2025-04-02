@@ -43,11 +43,11 @@ public class WebSecurityConfig {
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(
                         corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> requests.requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-ui/index.html/api/loan",
+                        "swagger-ui/**",
+//                        "swagger-ui/index.html/api/loan",
                         "api/user/login",
                         "api/user/register"
-                ).permitAll().anyRequest().hasRole("LIBRARIAN"))
+                ).permitAll().anyRequest().authenticated())
                 .formLogin((form) -> form.loginProcessingUrl(
                                 "/api/user/login")
                         .permitAll()

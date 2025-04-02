@@ -13,6 +13,7 @@ import mk.ukim.finki.emt.service.application.BookApplicationService;
 import mk.ukim.finki.emt.service.application.BookCopyApplicationService;
 import mk.ukim.finki.emt.service.domain.BookCopyService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class BookController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Додај нова книга", description = "Додава нов запис за книга која може да се изнајмува.")
     public ResponseEntity<UpdateBookDto> addBook(@RequestBody CreateBookDto bookDto) {
         return bookService.save(bookDto)
@@ -55,6 +57,7 @@ public class BookController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Избриши книга", description = "Брише запис за книга која повеќе не е во добра состојба.")
     public ResponseEntity<Void> delete(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         if(bookService.findById(id).isPresent()) {
@@ -65,6 +68,7 @@ public class BookController {
     }
 
     @PutMapping("/edit/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Измени запис за книга", description = "Го ажурира записот за дадена книга со нови информации.")
     public ResponseEntity<UpdateBookDto> editBook(@Parameter(description = "ID на книгата") @PathVariable Long id, @RequestBody CreateBookDto bookDto) {
         return bookService.update(id, bookDto)
@@ -81,6 +85,7 @@ public class BookController {
     }
 
     @PostMapping("/createCopy/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Креирај копија на книга", description = "Создава нова копија на дадена книга.")
     public ResponseEntity<UpdateBookCopyDto> createCopy(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         return copyService.createCopy(id)
