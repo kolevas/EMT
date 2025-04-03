@@ -35,6 +35,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> update(Long id, Book book) {
         Book tmp = bookRepository.findById(id).orElse(null);
+
         if (tmp == null) {
             return Optional.empty();
         }
