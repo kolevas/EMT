@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import mk.ukim.finki.emt.dto.CreateBookDto;
+import mk.ukim.finki.emt.dto.DisplayHistoryDto;
 import mk.ukim.finki.emt.dto.UpdateBookCopyDto;
 import mk.ukim.finki.emt.dto.UpdateBookDto;
 import mk.ukim.finki.emt.model.domain.Book;
@@ -33,6 +34,12 @@ public class BookController {
     @Operation(summary = "Најди ги сите книги", description = "Го враќа списокот на сите книги.")
     public List<UpdateBookDto> findAll() {
         return this.bookService.findAll();
+    }
+
+    @GetMapping("/history/{id}")
+    @Operation(summary = "Историја на книга", description = "Го враќа списокот на сите книги.")
+    public List<DisplayHistoryDto> getHistory(@PathVariable Long id) {
+        return bookService.getHistory(id);
     }
 
     @GetMapping("/{id}")
@@ -98,4 +105,6 @@ public class BookController {
     public List<UpdateBookCopyDto> findAllCopies(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         return this.copyService.findByBook(id);
     }
+
+
 }

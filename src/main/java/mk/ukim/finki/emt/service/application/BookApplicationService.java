@@ -1,6 +1,7 @@
 package mk.ukim.finki.emt.service.application;
 
 import mk.ukim.finki.emt.dto.CreateBookDto;
+import mk.ukim.finki.emt.dto.DisplayHistoryDto;
 import mk.ukim.finki.emt.dto.UpdateAuthorDto;
 import mk.ukim.finki.emt.dto.UpdateBookDto;
 import mk.ukim.finki.emt.model.domain.Book;
@@ -14,4 +15,5 @@ public interface BookApplicationService {
     public Optional<UpdateBookDto> delete(Long id);
     public List<UpdateBookDto> findAll();
     public Optional<UpdateBookDto> findById(Long id);
+    public List<DisplayHistoryDto> getHistory(Long id);
 }

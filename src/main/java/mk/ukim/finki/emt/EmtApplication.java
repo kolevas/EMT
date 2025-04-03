@@ -31,3 +31,5 @@ public class EmtApplication {
 //		"availableCopies": 5
 //		}
 //nov entitet primerok za sekoja kniga i da ne se cuva int available cpy tuku da ima vrska i da ima iznajmuvanje za toj primerok
+
+//istorija na promeni na kniga (na sekoj edit da se cuva kniga i da napraveme ednpoiunt kaj sho ke se listat site prethodni verzii na knigata

@@ -1,6 +1,7 @@
 package mk.ukim.finki.emt.service.application.impl;
 
 import mk.ukim.finki.emt.dto.CreateBookDto;
+import mk.ukim.finki.emt.dto.DisplayHistoryDto;
 import mk.ukim.finki.emt.dto.UpdateBookDto;
 import mk.ukim.finki.emt.model.domain.Author;
 import mk.ukim.finki.emt.model.domain.Book;
@@ -52,5 +53,10 @@ public class BookApplicationServiceImpl implements BookApplicationService {
     @Override
     public Optional<UpdateBookDto> findById(Long id) {
         return bookService.findById(id).map(UpdateBookDto::from);
+    }
+
+    @Override
+    public List<DisplayHistoryDto> getHistory(Long id) {
+        return bookService.getHistory(id).stream().map(DisplayHistoryDto::from).collect(Collectors.toList());
     }
 }

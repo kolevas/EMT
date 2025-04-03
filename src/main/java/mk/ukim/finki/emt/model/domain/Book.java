@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import mk.ukim.finki.emt.model.enumerations.BookCategory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 public class Book {
@@ -16,15 +19,19 @@ public class Book {
     private BookCategory category;
     @ManyToOne
     private Author author;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<BookHistory> bookHistory;
 
     public Book() {
 
+        bookHistory = new ArrayList<>();
     }
 
     public Book( String name, BookCategory category, Author author) {
         this.name = name;
         this.category = category;
         this.author = author;
+        bookHistory = new ArrayList<>();
     }
 
 }

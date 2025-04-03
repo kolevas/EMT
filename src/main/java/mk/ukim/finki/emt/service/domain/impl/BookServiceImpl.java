@@ -1,6 +1,7 @@
 package mk.ukim.finki.emt.service.domain.impl;
 
 import mk.ukim.finki.emt.model.domain.Book;
+import mk.ukim.finki.emt.model.domain.BookHistory;
 import mk.ukim.finki.emt.repository.BookRepository;
 import mk.ukim.finki.emt.service.domain.AuthorService;
 import mk.ukim.finki.emt.service.domain.BookService;
@@ -33,17 +34,24 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<Book> update(Long id, Book book) {
-
+        Book tmp = bookRepository.findById(id).orElse(null);
+        if (tmp == null) {
+            return Optional.empty();
+        }
+        BookHistory copy = new BookHistory(book.getName(), book.getCategory(), book.getAuthor());
         if (book.getAuthor() != null) {
-            book.setAuthor(authorService.findById(book.getAuthor().getId()).get());
+            tmp.setAuthor(authorService.findById(book.getAuthor().getId()).get());
+
+            System.out.println(book.getBookHistory());
         }
         if (book.getCategory() != null) {
-            book.setCategory(book.getCategory());
+            tmp.setCategory(book.getCategory());
         }
         if (book.getName() != null) {
-            book.setName(book.getName());
+            tmp.setName(book.getName());
         }
-        return Optional.of(this.bookRepository.save(book));
+        tmp.getBookHistory().add(copy);
+        return Optional.of(this.bookRepository.save(tmp));
     }
 
     @Override
@@ -69,6 +77,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> findById(Long id) {
         return Optional.of(bookRepository.findById(id).orElseThrow(RuntimeException::new));
+    }
+
+    @Override
+    public List<BookHistory> getHistory(Long id) {
+        return this.findById(id).get().getBookHistory();
     }
 
 //    @Override
