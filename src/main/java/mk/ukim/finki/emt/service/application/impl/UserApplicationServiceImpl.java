@@ -3,6 +3,7 @@ package mk.ukim.finki.emt.service.application.impl;
 import mk.ukim.finki.emt.dto.*;
 import mk.ukim.finki.emt.model.domain.Book;
 import mk.ukim.finki.emt.model.domain.User;
+import mk.ukim.finki.emt.security.JwtHelper;
 import mk.ukim.finki.emt.service.application.UserApplicationService;
 import mk.ukim.finki.emt.service.domain.UserService;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserApplicationServiceImpl implements UserApplicationService {
     private final UserService userService;
+    private final JwtHelper jwtHelper;
 
-    public UserApplicationServiceImpl(UserService userService) {
+
+    public UserApplicationServiceImpl(UserService userService, JwtHelper jwtHelper) {
         this.userService = userService;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -33,11 +37,13 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public Optional<UpdateUserDto> login(LoginUserDto loginUserDto) {
-        return Optional.of(UpdateUserDto.from(userService.login(
-                loginUserDto.username(),
-                loginUserDto.password()
-        )));
+    public Optional<LoginResponseDto> login(LoginUserDto loginUserDto) {
+        User user = userService.login(loginUserDto.username(), loginUserDto.password());
+
+        String token = jwtHelper.generateToken(user);
+
+        return Optional.of(new LoginResponseDto(token));
+
     }
 
     @Override
@@ -63,5 +69,11 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         return userService.loanWishlistedBooks(username).stream().map(UpdateBookCopyDto::from).collect(Collectors.toList());
 
     }
+
+    @Override
+    public List<UsersWithoutWishlistDto> getUsersWithoutWishlist() {
+        return userService.getUsersWithoutWishlist().stream().map(UsersWithoutWishlistDto::from).toList();
+    }
+
 
 }

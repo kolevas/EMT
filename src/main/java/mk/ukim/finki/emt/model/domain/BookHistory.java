@@ -6,6 +6,7 @@ import mk.ukim.finki.emt.model.enumerations.BookCategory;
 
 @Data
 @Entity
+@Table(name = "book_history")
 public class BookHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

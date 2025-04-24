@@ -2,6 +2,7 @@ package mk.ukim.finki.emt.service.domain.impl;
 
 import mk.ukim.finki.emt.model.domain.Author;
 import mk.ukim.finki.emt.model.domain.Country;
+import mk.ukim.finki.emt.model.projections.AuthorName;
 import mk.ukim.finki.emt.repository.AuthorRepository;
 import mk.ukim.finki.emt.service.domain.AuthorService;
 import mk.ukim.finki.emt.service.domain.CountryService;
@@ -51,5 +52,10 @@ public class AuthorServiceImpl implements AuthorService {
     public void delete(Long id) {
         Optional<Author> author = this.findById(id);
         authorRepository.delete(author.get());
+    }
+
+    @Override
+    public List<AuthorName> findAllProjectedBy() {
+        return authorRepository.findAllProjectedBy();
     }
 }

@@ -1,6 +1,7 @@
 package mk.ukim.finki.emt.service.domain;
 
 import mk.ukim.finki.emt.model.domain.Author;
+import mk.ukim.finki.emt.model.projections.AuthorName;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +12,5 @@ public interface AuthorService {
     Optional<Author> update(Long id, Author author);
     Optional<Author> save(Author author);
     void delete(Long id);
+    List<AuthorName> findAllProjectedBy();
 }

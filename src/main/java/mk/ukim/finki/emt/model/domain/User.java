@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "shop_users")
+
 public class User implements UserDetails {
 
     @Id
@@ -26,7 +27,7 @@ public class User implements UserDetails {
     private String name;
 
     private String surname;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "readers")
     private List<Book> wishlistedBooks;
 
     private boolean isAccountNonExpired = true;

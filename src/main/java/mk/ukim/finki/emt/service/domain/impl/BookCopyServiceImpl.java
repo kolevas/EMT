@@ -2,6 +2,7 @@ package mk.ukim.finki.emt.service.domain.impl;
 
 import mk.ukim.finki.emt.model.domain.Book;
 import mk.ukim.finki.emt.model.domain.BookCopy;
+import mk.ukim.finki.emt.model.domain.User;
 import mk.ukim.finki.emt.repository.BookCopyRepository;
 import mk.ukim.finki.emt.service.domain.BookCopyService;
 import mk.ukim.finki.emt.service.domain.BookService;

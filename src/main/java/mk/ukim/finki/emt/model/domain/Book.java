@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "book")
 public class Book {
 //    id (Long), name (String), category (enum), author (Author), availableCopies (Integer)
     @Id
@@ -22,6 +23,14 @@ public class Book {
     @OneToMany(cascade = CascadeType.ALL)
     private List<BookHistory> bookHistory;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_readers",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_username")
+    )
+    List<User> readers;
+
     public Book() {
 
         bookHistory = new ArrayList<>();
@@ -32,6 +41,7 @@ public class Book {
         this.category = category;
         this.author = author;
         bookHistory = new ArrayList<>();
+        readers = new ArrayList<>();
     }
 
 }

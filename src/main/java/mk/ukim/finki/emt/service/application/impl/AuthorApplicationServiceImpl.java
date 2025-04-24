@@ -2,6 +2,7 @@ package mk.ukim.finki.emt.service.application.impl;
 
 import mk.ukim.finki.emt.dto.CreateAuthorDto;
 import mk.ukim.finki.emt.dto.UpdateAuthorDto;
+import mk.ukim.finki.emt.model.projections.AuthorName;
 import mk.ukim.finki.emt.service.application.AuthorApplicationService;
 import mk.ukim.finki.emt.service.domain.AuthorService;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,10 @@ public class AuthorApplicationServiceImpl implements AuthorApplicationService {
     @Override
     public void delete(Long id) {
         authorService.delete(id);
+    }
+
+    @Override
+    public List<AuthorName> findAllProjectedBy() {
+        return authorService.findAllProjectedBy();
     }
 }

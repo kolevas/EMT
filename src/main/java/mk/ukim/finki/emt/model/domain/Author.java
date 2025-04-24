@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "author")
 public class Author {
 //    name (String), surname (String), country (Country)
     @Id

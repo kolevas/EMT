@@ -19,4 +19,5 @@ public interface UserService extends UserDetailsService {
     List<Book> addBookToWhishlist(String username, Long bookId);
     List<Book> getUserWishlist(String username);
     List<BookCopy> loanWishlistedBooks(String username);
+    List<User> getUsersWithoutWishlist();
 }

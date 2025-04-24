@@ -10,9 +10,13 @@ import mk.ukim.finki.emt.dto.UpdateBookCopyDto;
 import mk.ukim.finki.emt.dto.UpdateBookDto;
 import mk.ukim.finki.emt.model.domain.Book;
 import mk.ukim.finki.emt.model.domain.BookCopy;
+import mk.ukim.finki.emt.repository.BooksPerAuthorViewRepository;
 import mk.ukim.finki.emt.service.application.BookApplicationService;
 import mk.ukim.finki.emt.service.application.BookCopyApplicationService;
+import mk.ukim.finki.emt.service.application.BooksPerAuthorViewApplicationService;
+import mk.ukim.finki.emt.service.application.impl.BooksPerAuthorViewApplicationServiceImpl;
 import mk.ukim.finki.emt.service.domain.BookCopyService;
+import mk.ukim.finki.emt.service.domain.BooksPerAuthorViewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +27,13 @@ import java.util.List;
 public class BookController {
     private final BookApplicationService bookService;
     private final BookCopyApplicationService copyService;
+    private final BooksPerAuthorViewApplicationService booksPerAuthorViewService;
 
-    public BookController(BookApplicationService bookService, BookCopyApplicationService copyService) {
+    public BookController(BookApplicationService bookService, BookCopyApplicationService copyService, BooksPerAuthorViewApplicationService booksPerAuthorViewService) {
         this.bookService = bookService;
         this.copyService = copyService;
+
+        this.booksPerAuthorViewService = booksPerAuthorViewService;
     }
 
 
@@ -55,7 +62,6 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Додај нова книга", description = "Додава нов запис за книга која може да се изнајмува.")
     public ResponseEntity<UpdateBookDto> addBook(@RequestBody CreateBookDto bookDto) {
         return bookService.save(bookDto)
@@ -64,7 +70,6 @@ public class BookController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Избриши книга", description = "Брише запис за книга која повеќе не е во добра состојба.")
     public ResponseEntity<Void> delete(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         if(bookService.findById(id).isPresent()) {
@@ -75,7 +80,6 @@ public class BookController {
     }
 
     @PutMapping("/edit/{id}")
-    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Измени запис за книга", description = "Го ажурира записот за дадена книга со нови информации.")
     public ResponseEntity<UpdateBookDto> editBook(@Parameter(description = "ID на книгата") @PathVariable Long id, @RequestBody CreateBookDto bookDto) {
         return bookService.update(id, bookDto)
@@ -85,14 +89,13 @@ public class BookController {
 
     @PutMapping("/loan/{id}")
     @Operation(summary = "Изнајми книга", description = "Означува одредена копија на книга како изнајмена.")
-    public ResponseEntity<UpdateBookDto> loanBook(@Parameter(description = "ID на копијата на книгата") @PathVariable Long id) {
+    public ResponseEntity<UpdateBookDto> loanBook(@Parameter(description = "ID на копијата на книгата") @PathVariable Long id, @RequestParam String username) {
         return copyService.loan(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/createCopy/{id}")
-    @PreAuthorize("hasRole('LIBRARIAN')")
     @Operation(summary = "Креирај копија на книга", description = "Создава нова копија на дадена книга.")
     public ResponseEntity<UpdateBookCopyDto> createCopy(@Parameter(description = "ID на книгата") @PathVariable Long id) {
         return copyService.createCopy(id)
@@ -106,5 +109,9 @@ public class BookController {
         return this.copyService.findByBook(id);
     }
 
+    @GetMapping("/books/by-author")
+    public ResponseEntity<Integer> numBooksByAuthor(@RequestParam Long authorId) {
+        return booksPerAuthorViewService.numBooksByAuthorId(authorId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 }

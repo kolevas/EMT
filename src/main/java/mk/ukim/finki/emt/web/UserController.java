@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import mk.ukim.finki.emt.dto.*;
+import mk.ukim.finki.emt.model.domain.User;
+import mk.ukim.finki.emt.repository.UserRepository;
 import mk.ukim.finki.emt.service.application.UserApplicationService;
+import mk.ukim.finki.emt.service.domain.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,7 @@ import java.util.List;
 public class UserController {
 
     private final UserApplicationService userApplicationService;
+
 
     public UserController(UserApplicationService userApplicationService) {
         this.userApplicationService = userApplicationService;
@@ -43,7 +47,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "User login", description = "Authenticates a user and starts a session")
+    @Operation(summary = "User login", description = "Authenticates a user and generates a JWT")
     @ApiResponses(
             value = {@ApiResponse(
                     responseCode = "200",
@@ -51,18 +55,16 @@ public class UserController {
             ), @ApiResponse(responseCode = "404", description = "Invalid username or password")}
     )
     @PostMapping("/login")
-    public ResponseEntity<UpdateUserDto> login(HttpServletRequest request) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginUserDto loginUserDto) {
         try {
-            UpdateUserDto displayUserDto = userApplicationService.login(
-                    new LoginUserDto(request.getParameter("username"), request.getParameter("password"))
-            ).orElseThrow(RuntimeException::new);
-
-            request.getSession().setAttribute("user", displayUserDto.toUser());
-            return ResponseEntity.ok(displayUserDto);
+            return userApplicationService.login(loginUserDto)
+                    .map(ResponseEntity::ok)
+                    .orElseThrow(RuntimeException::new);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @Operation(summary = "User logout", description = "Ends the user's session")
     @ApiResponse(responseCode = "200", description = "User logged out successfully")
@@ -87,5 +89,11 @@ public class UserController {
     public List<UpdateBookCopyDto> loanUserWishlist(@PathVariable String username) {
         return userApplicationService.loanWishlistedBooks(username);
     }
+
+    @GetMapping("/list-user-info")
+    public List<UsersWithoutWishlistDto> getAllUsers() {
+        return userApplicationService.getUsersWithoutWishlist();
+    }
+
 }
 
