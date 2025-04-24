@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import mk.ukim.finki.emt.dto.*;
+import mk.ukim.finki.emt.model.domain.JwtLog;
 import mk.ukim.finki.emt.model.domain.User;
 import mk.ukim.finki.emt.repository.UserRepository;
 import mk.ukim.finki.emt.service.application.UserApplicationService;
@@ -93,6 +94,11 @@ public class UserController {
     @GetMapping("/list-user-info")
     public List<UsersWithoutWishlistDto> getAllUsers() {
         return userApplicationService.getUsersWithoutWishlist();
+    }
+
+    @GetMapping("/login-logs")
+    public List<JwtLog> getUserLoginLogs() {
+        return userApplicationService.getJwtLogs();
     }
 
 }

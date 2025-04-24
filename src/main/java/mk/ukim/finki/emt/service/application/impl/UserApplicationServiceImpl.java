@@ -2,12 +2,16 @@ package mk.ukim.finki.emt.service.application.impl;
 
 import mk.ukim.finki.emt.dto.*;
 import mk.ukim.finki.emt.model.domain.Book;
+import mk.ukim.finki.emt.model.domain.JwtLog;
 import mk.ukim.finki.emt.model.domain.User;
+import mk.ukim.finki.emt.repository.LogsRepository;
 import mk.ukim.finki.emt.security.JwtHelper;
 import mk.ukim.finki.emt.service.application.UserApplicationService;
 import mk.ukim.finki.emt.service.domain.UserService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,11 +20,15 @@ import java.util.stream.Collectors;
 public class UserApplicationServiceImpl implements UserApplicationService {
     private final UserService userService;
     private final JwtHelper jwtHelper;
+    private final LogsRepository logsRepository;
+    private final LogsRepository loginLogsRepository;
 
 
-    public UserApplicationServiceImpl(UserService userService, JwtHelper jwtHelper) {
+    public UserApplicationServiceImpl(UserService userService, JwtHelper jwtHelper, LogsRepository logsRepository, LogsRepository loginLogsRepository) {
         this.userService = userService;
         this.jwtHelper = jwtHelper;
+        this.logsRepository = logsRepository;
+        this.loginLogsRepository = loginLogsRepository;
     }
 
     @Override
@@ -41,6 +49,8 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         User user = userService.login(loginUserDto.username(), loginUserDto.password());
 
         String token = jwtHelper.generateToken(user);
+        JwtLog jwtLog = new JwtLog(token, LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        logsRepository.save(jwtLog);
 
         return Optional.of(new LoginResponseDto(token));
 
@@ -73,6 +83,11 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     @Override
     public List<UsersWithoutWishlistDto> getUsersWithoutWishlist() {
         return userService.getUsersWithoutWishlist().stream().map(UsersWithoutWishlistDto::from).toList();
+    }
+
+    @Override
+    public List<JwtLog> getJwtLogs() {
+        return loginLogsRepository.findAll();
     }
 
 
