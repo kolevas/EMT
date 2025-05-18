@@ -11,6 +11,6 @@ public interface CountryService {
     Optional<Country> findById(Long id);
     Optional<Country> save(Country country);
     Optional<Country> update(Long id, Country country);
-    void delete(Long id);
+    Optional<Country> delete(Long id);
 
 }

@@ -14,6 +14,6 @@ public interface AuthorApplicationService {
     Optional<UpdateAuthorDto> findById(Long id);
     Optional<UpdateAuthorDto> update(Long id, CreateAuthorDto authorDto);
     Optional<UpdateAuthorDto> save(CreateAuthorDto createAuthorDto);
-    void delete(Long id);
+    Optional<UpdateAuthorDto> delete(Long id);
     List<AuthorName> findAllProjectedBy();
 }

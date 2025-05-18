@@ -13,7 +13,7 @@ import java.util.List;
 public class Book {
 //    id (Long), name (String), category (enum), author (Author), availableCopies (Integer)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Enumerated(EnumType.STRING)

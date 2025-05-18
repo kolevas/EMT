@@ -8,7 +8,7 @@ import mk.ukim.finki.emt.dto.CreateBookDto;
 import mk.ukim.finki.emt.dto.DisplayHistoryDto;
 import mk.ukim.finki.emt.dto.UpdateBookCopyDto;
 import mk.ukim.finki.emt.dto.UpdateBookDto;
-import mk.ukim.finki.emt.model.domain.Book;
+import mk.ukim.finki.emt.model.enumerations.BookCategory;
 import mk.ukim.finki.emt.model.domain.BookCopy;
 import mk.ukim.finki.emt.repository.BooksPerAuthorViewRepository;
 import mk.ukim.finki.emt.service.application.BookApplicationService;
@@ -21,9 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
-@RestController("/api")
+@RestController()
+@RequestMapping("/api/books")
 public class BookController {
     private final BookApplicationService bookService;
     private final BookCopyApplicationService copyService;
@@ -114,4 +118,10 @@ public class BookController {
         return booksPerAuthorViewService.numBooksByAuthorId(authorId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/categories")
+    public List<String> categories() {
+        return Arrays.stream(BookCategory.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
 }

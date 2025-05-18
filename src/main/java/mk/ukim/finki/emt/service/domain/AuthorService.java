@@ -11,6 +11,6 @@ public interface AuthorService {
     Optional<Author> findById(Long id);
     Optional<Author> update(Long id, Author author);
     Optional<Author> save(Author author);
-    void delete(Long id);
+    Optional<Author> delete(Long id);
     List<AuthorName> findAllProjectedBy();
 }

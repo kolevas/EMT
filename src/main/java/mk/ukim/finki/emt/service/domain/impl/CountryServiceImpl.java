@@ -39,8 +39,9 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public void delete(Long id) {
+    public Optional<Country> delete(Long id) {
         Optional<Country> country = this.findById(id);
         countryRepository.delete(country.get());
+        return country;
     }
 }

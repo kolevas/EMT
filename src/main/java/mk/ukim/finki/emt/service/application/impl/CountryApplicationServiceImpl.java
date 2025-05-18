@@ -1,7 +1,6 @@
 package mk.ukim.finki.emt.service.application.impl;
 
 import mk.ukim.finki.emt.dto.CreateCountryDto;
-import mk.ukim.finki.emt.dto.UpdateAuthorDto;
 import mk.ukim.finki.emt.dto.UpdateCountryDto;
 import mk.ukim.finki.emt.service.application.CountryApplicationService;
 import mk.ukim.finki.emt.service.domain.CountryService;
@@ -39,7 +38,7 @@ public class CountryApplicationServiceImpl implements CountryApplicationService 
     }
 
     @Override
-    public void delete(Long id) {
-        countryService.delete(id);
+    public Optional<UpdateCountryDto> delete(Long id) {
+        return countryService.delete(id).map(UpdateCountryDto::from);
     }
 }

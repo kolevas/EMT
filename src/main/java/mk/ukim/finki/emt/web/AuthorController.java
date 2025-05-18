@@ -1,22 +1,18 @@
 package mk.ukim.finki.emt.web;
 
+import mk.ukim.finki.emt.dto.CreateAuthorDto;
 import mk.ukim.finki.emt.dto.UpdateAuthorDto;
 import mk.ukim.finki.emt.model.domain.Author;
 import mk.ukim.finki.emt.model.projections.AuthorName;
-import mk.ukim.finki.emt.repository.AuthorRepository;
-import mk.ukim.finki.emt.repository.AuthorsPerCountryViewRepository;
 import mk.ukim.finki.emt.service.application.AuthorApplicationService;
-import mk.ukim.finki.emt.service.domain.AuthorService;
 import mk.ukim.finki.emt.service.domain.AuthorsPerCountryViewService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/authors")
+@RequestMapping("/api/authors")
 public class AuthorController {
 
     private final AuthorApplicationService authorService;
@@ -26,7 +22,7 @@ public class AuthorController {
         this.authorsPerCountryViewService = authorsPerCountryViewService;
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<UpdateAuthorDto> getAllAuthors() {
         return authorService.findAll();
     }
@@ -41,4 +37,22 @@ public class AuthorController {
         return authorService.findAllProjectedBy();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UpdateAuthorDto> author_by_id(@PathVariable Long id) {
+        return authorService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<UpdateAuthorDto> deleteAuthor(@PathVariable Long id) {
+        return authorService.delete(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    @PostMapping("/add")
+    public ResponseEntity<UpdateAuthorDto> addAuthor(@RequestBody CreateAuthorDto author) {
+        return authorService.save(author).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<UpdateAuthorDto> addAuthor(@PathVariable Long id, @RequestBody CreateAuthorDto author) {
+        return authorService.update(id, author).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 }
